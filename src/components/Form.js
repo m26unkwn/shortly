@@ -87,7 +87,9 @@ function Form({ url, handleChange, handleClick, error }) {
           onChange={handleChange}
         />
         {error && <p className='error-message'>{error}</p>}
-        <button onClick={handleClick}>Shorten It!</button>
+        <button style={{ cursor: "pointer" }} onClick={handleClick}>
+          Shorten It!
+        </button>
       </div>
     </FormElement>
   );
