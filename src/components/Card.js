@@ -70,14 +70,14 @@ function Card({ card }) {
 
   const handleCopy = () => {
     setCopied(true);
-    navigator.clipboard.writeText(`https://rel.ink/${card.hashId}`);
+    navigator.clipboard.writeText(`https://shrtco.de/${card.code}`);
   };
 
   return (
     <CardElement>
       <p className='card-link'>{card.url}</p>
       <div className='card-line'></div>
-      <p className='card-url'>{`https://rel.ink/${card.hashId}`}</p>
+      <p className='card-url'>{`https://shrtco.de/${card.code}`}</p>
       <button
         onClick={handleCopy}
         className={`btn-copy ${copied && "btn-clicked"}`}

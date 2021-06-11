@@ -36,15 +36,14 @@ const App = () => {
       return setError("Please add a link");
     }
 
-    fetch("https://rel.ink/api/links/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url: url }),
-    })
+    fetch(`https://api.shrtco.de/v2/shorten?url=${url}`)
       .then((response) => response.json())
-      .then((json) => setCards([...cards, { url, hashId: json.hashid }]));
+      .then((json) =>
+        setCards([
+          ...cards,
+          { url: json.result.short_link, code: json.result.code },
+        ])
+      );
 
     return setUrl("");
   };
