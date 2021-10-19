@@ -75,7 +75,7 @@ function Card({ card }) {
 
   return (
     <CardElement>
-      <p className='card-link'>{card.url}</p>
+      <p className='card-link'>{card.url_org}</p>
       <div className='card-line'></div>
       <p className='card-url'>{`https://shrtco.de/${card.code}`}</p>
       <button

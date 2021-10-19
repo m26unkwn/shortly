@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { Header } from "./components/Header";
 import Footer from "./screen/Footer";
@@ -12,6 +12,7 @@ import Form from "./components/Form";
 const App = () => {
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [cards, setCards] = useState(() => {
     const localData = localStorage.getItem("cards");
     return localData ? JSON.parse(localData) : [];
@@ -31,23 +32,42 @@ const App = () => {
     return false;
   }
 
-  const shorten = () => {
+  const shorten = useCallback(async () => {
     if (!isValid(url)) {
       return setError("Please add a link");
     }
+    setLoading(true);
 
-    fetch(`https://api.shrtco.de/v2/shorten?url=${url}`)
-      .then((response) => response.json())
-      .then((json) =>
-        setCards([
-          ...cards,
-          { url: json.result.short_link, code: json.result.code },
-        ])
+    try {
+      const response = await fetch(
+        `https://api.shrtco.de/v2/shorten?url=${url}`
       );
+      const data = await response.json();
+      setCards([
+        ...cards,
+        { url_org: url, url: data.result.short_link, code: data.result.code },
+      ]);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+    setUrl(" ");
+  }, [cards, url]);
+  // )() => {
+  //   if (!isValid(url)) {
+  //     return setError("Please add a link");
+  //   }
+  //   setLoading(true);
+  //   fetch(`https://api.shrtco.de/v2/shorten?url=${url}`)
+  //     .then((response) => response.json())
+  //     .then((json) =>
+  //       setCards([
+  //         ...cards,
+  //         { url_org: url, url: json.result.short_link, code: json.result.code },
+  //       ])
+  //     );
 
-    return setUrl("");
-  };
-
+  console.log(loading);
   const inputValue = (e) => {
     setUrl(e.target.value);
     if (e.target.value) {
@@ -68,7 +88,8 @@ const App = () => {
           handleClick={shorten}
           error={error}
         />
-        {cards.map((card, index) => (
+        {loading && <div className='loader'></div>}
+        {cards.reverse().map((card, index) => (
           <Card key={index} card={card} />
         ))}
         <Info />
